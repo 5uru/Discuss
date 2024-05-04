@@ -4,11 +4,11 @@ import json
 import streamlit as st
 from streamlit_mic_recorder import mic_recorder
 
-from speak import database
-from speak.chat_engine import chat
-from speak.speech_to_text import transcribe
-from speak.spell_check import grammar_coherence_correction
-from speak.text_to_speech import generate_audio
+from app import database
+from app.chat_engine import chat
+from app.speech_to_text import transcribe
+from app.spell_check import grammar_coherence_correction
+from app.text_to_speech import generate_audio
 
 
 def answers(audio_bytes, chat_identifier):
