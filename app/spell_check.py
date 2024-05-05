@@ -1,75 +1,61 @@
-import Levenshtein as lev
-from transformers import AutoTokenizer, T5ForConditionalGeneration
+import translators as ts
+from Levenshtein import distance as levenshtein_distance
+from language_tool_python import LanguageTool
+from nltk.translate.bleu_score import sentence_bleu
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
-def calculate_overall_similarity_score(
-    original, grammar_corrected, coherence_corrected, rewritten
-):
-    grammar_similarity = 1 - lev.distance(original, grammar_corrected) / max(
-        len(original), len(grammar_corrected)
-    )
-    coherence_similarity = 1 - lev.distance(original, coherence_corrected) / max(
-        len(original), len(coherence_corrected)
-    )
-    rewritten_similarity = 1 - lev.distance(original, rewritten) / max(
-        len(original), len(rewritten)
-    )
-
-    # Calcul de la moyenne des scores de similarité
-    average_similarity = (
-        grammar_similarity + coherence_similarity + rewritten_similarity
-    ) / 3
-
-    return int(average_similarity * 100)
+def translate(text, to_language="en"):
+    return ts.translate_text(text, to_language=to_language)
 
 
-tokenizer = AutoTokenizer.from_pretrained("grammarly/coedit-large")
-model = T5ForConditionalGeneration.from_pretrained("grammarly/coedit-large")
+def grammar_check(text, language="en-US"):
+    tool = LanguageTool(language)
+    return tool.correct(text)
 
 
-def process_text(text, task_type):
-    """
-    Process the given text based on the task type.
+def combined_similarity_score(sentence1, sentence2):
+    # Tokenize sentences
+    tokens1 = sentence1.split()
+    tokens2 = sentence2.split()
 
-    Args:
-        text (str): The text to process.
-        task_type (str): The type of task to perform on the text.
+    # BLEU Score
+    bleu_score = sentence_bleu([tokens1], tokens2)
 
-    Returns:
-        str: The processed text.
-    """
-    task_prefixes = {
-        "grammar_correction": "Fix grammatical errors in this sentence:",
-        "coherence_correction": "Make this text coherent:",
-        "rewrite_text": "Rewrite to make this easier to understand:",
-    }
-    input_text = f"{task_prefixes[task_type]} {text}"  # prepend the task prefix
-    input_ids = tokenizer(input_text, return_tensors="pt").input_ids
-    outputs = model.generate(input_ids, max_length=1000)
-    return tokenizer.decode(outputs[0], skip_special_tokens=True)
+    # Levenshtein Distance
+    lev_distance = levenshtein_distance(sentence1, sentence2)
+    max_len = max(len(sentence1), len(sentence2))
+    normalized_lev = 1 - lev_distance / max_len
+
+    # Cosine Similarity
+    vectorized = TfidfVectorizer()
+    tfidf = vectorized.fit_transform([sentence1, sentence2])
+    cosine_sim = (tfidf * tfidf.T).A[0, 1]
+
+    # Combined Score
+    combined_score = (bleu_score + normalized_lev + cosine_sim) / 3
+    return int(combined_score * 100)
 
 
-def grammar_coherence_correction(text):
+def grammar_coherence_correction(text, language):
     """
     Combine grammar correction, coherence correction, and text rewriting.
 
     Args:
+        language:
         text (str): The text to process.
 
     Returns:
         dict: A dictionary containing the score, grammar corrected text, coherence corrected text, and rewritten text.
     """
-    grammar_corrected = process_text(text, "grammar_correction")
-    coherence_corrected = process_text(grammar_corrected, "coherence_correction")
-    rewritten = process_text(coherence_corrected, "rewrite_text")
+    grammar_corrected = grammar_check(text, language)
+    translation_language = "en" if language != "en" else "fr"
+    coherence_corrected = translate(grammar_corrected, translation_language)
+    rewritten = translate(coherence_corrected, language)
     # calculate the difference between texts
-    score = calculate_overall_similarity_score(
-        text, grammar_corrected, coherence_corrected, rewritten
-    )
+    score = combined_similarity_score(text, rewritten)
     return {
         "score": score,
-        "grammar_corrected": grammar_corrected,
-        "coherence_corrected": coherence_corrected,
         "rewritten": rewritten,
         "original": text,
     }
