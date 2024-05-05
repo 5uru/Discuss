@@ -5,8 +5,6 @@ mlx-whisper==0.1.0
 git+https://github.com/huggingface/parler-tts.git
 
 translators==5.9.1
-spacy==3.7.4
-verbecc==1.9.7
 levenshtein==0.25.1
 nltk==3.8.1
 scikit-learn==1.4.2
