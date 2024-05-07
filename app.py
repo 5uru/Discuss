@@ -2,13 +2,13 @@ import contextlib
 import json
 
 import streamlit as st
+from backend.chat_engine import chat
+from backend.speech_to_text import transcribe
+from backend.spell_check import grammar_coherence_correction
+from backend.text_to_speech import generate_audio
 from streamlit_mic_recorder import mic_recorder
 
-from app import database
-from app.chat_engine import chat
-from app.speech_to_text import transcribe
-from app.spell_check import grammar_coherence_correction
-from app.text_to_speech import generate_audio
+from backend import database
 
 
 def answers(audio_bytes, chat_identifier):
@@ -21,15 +21,17 @@ def answers(audio_bytes, chat_identifier):
         chat_identifier: The identifier of the chat.
 
     Returns:
-        None
-"""
+        None"""
     # save the audio on tmp_file.wave
     with open("tmp_file.wav", "wb") as file:
         file.write(audio_bytes)
     audio_transcribe = transcribe()
     message_corrected = grammar_coherence_correction(audio_transcribe)
     database.insert_message(
-        chat_id=chat_id, role="user", content=message_corrected, audio=audio_bytes,
+        chat_id=chat_id,
+        role="user",
+        content=message_corrected,
+        audio=audio_bytes,
     )
     all_messages = database.get_messages_by_chat_id(chat_identifier)
     # inverse messages list
@@ -52,7 +54,9 @@ def answers(audio_bytes, chat_identifier):
 
 
 st.set_page_config(
-    page_title="Speak", page_icon="🧊", layout="wide",
+    page_title="Speak",
+    page_icon="🧊",
+    layout="wide",
 )
 st.title("Speak: A chatbot for language learning")
 col1, col2 = st.columns([1, 4])
