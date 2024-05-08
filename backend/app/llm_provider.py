@@ -1,7 +1,7 @@
 from mlx_lm import load, generate
 
 
-LLM_MODEL = "mlx-community/Phi-3-mini-4k-instruct-4bit"
+LLM_MODEL = "mlx-community/Meta-Llama-3-8B-Instruct-4bit"
 
 
 def generation(text):

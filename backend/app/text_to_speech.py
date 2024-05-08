@@ -7,9 +7,7 @@ DEFAULT_DESCRIPTION = "A female speaker with a slightly low-pitched voice delive
 TTS_MODEL = "parler-tts/parler_tts_mini_v0.1"
 
 
-def generate_audio(
-    text: str, description: str = DEFAULT_DESCRIPTION
-) -> tuple[numpy.ndarray, int]:
+def generate_audio(text: str, description: str = DEFAULT_DESCRIPTION) -> dict:
     """
     Generates audio from the given text.
 
@@ -30,4 +28,4 @@ def generate_audio(
 
     generation = model.generate(input_ids=input_ids, prompt_input_ids=prompt_input_ids)
     audio_arr = generation.cpu().numpy().squeeze()
-    return audio_arr, model.config.sampling_rate
+    return {"audio": audio_arr.tolist(), "sampling_rate": model.config.sampling_rate}

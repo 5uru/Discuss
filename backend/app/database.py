@@ -1,20 +1,18 @@
+import json
 import sqlite3
-from sqlite3 import Binary
 
 # Create tables
-connection = sqlite3.connect("Speak.db", check_same_thread=False)
+connection = sqlite3.connect("Discute.db", check_same_thread=False)
 cursor = connection.cursor()
-cursor.execute(
-    """
-    PRAGMA journal_mode=WAL;
-    PRAGMA synchronous=NORMAL;
-"""
-)
+cursor.execute("PRAGMA journal_mode=WAL;")
+cursor.execute("PRAGMA synchronous=NORMAL;")
 cursor.execute(
     """
     CREATE TABLE IF NOT EXISTS chat (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL
+        name TEXT NOT NULL,
+        prompt TEXT NOT NULL,
+        roles TEXT NOT NULL  
     );
 """
 )
@@ -24,8 +22,8 @@ cursor.execute(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         chat_id INTEGER,
         role TEXT,
-        content BLOB,
-        audio BLOB,
+        content TEXT,
+        audio TEXT,
         date DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (chat_id) REFERENCES chat(id)
     );
@@ -41,20 +39,33 @@ def get_all_chats():
         return cursor_.fetchall()
 
 
-def insert_chat(name):
+def insert_chat(name, prompt, roles):
+    roles_json = json.dumps(roles)
     with connection:
         cursor_ = connection.cursor()
-        cursor_.execute("INSERT INTO chat (name) VALUES (?)", (name,))
+        cursor_.execute(
+            "INSERT INTO chat (name, prompt, roles) VALUES (?, ?,?)",
+            (name, prompt, roles_json),
+        )
         return cursor_.lastrowid
 
 
 def insert_message(chat_id, role, content, audio):
+    audio_json = json.dumps(audio)
+    content = json.dumps(content)
     with connection:
         cursor_ = connection.cursor()
         cursor_.execute(
             "INSERT INTO message (chat_id, role, content, audio) VALUES (?, ?, ?, ?)",
-            (chat_id, role, Binary(content), audio),
+            (chat_id, role, content, audio_json),
         )
+
+
+def get_chat_by_id(chat_id):
+    with connection:
+        cursor_ = connection.cursor()
+        cursor_.execute("SELECT * FROM chat WHERE id = ?", (chat_id,))
+        return cursor_.fetchone()
 
 
 def get_messages_by_chat_id(chat_id):
