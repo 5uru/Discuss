@@ -12,7 +12,10 @@ cursor.execute(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         prompt TEXT NOT NULL,
-        roles TEXT NOT NULL  
+        roles TEXT NOT NULL,
+        description TEXT NOT NULL, 
+        language TEXT DEFAULT 'en',
+        voice TEXT NOT NULL    
     );
 """
 )
@@ -39,13 +42,13 @@ def get_all_chats():
         return cursor_.fetchall()
 
 
-def insert_chat(name, prompt, roles):
+def insert_chat(name, prompt, roles, description, language, voice):
     roles_json = json.dumps(roles)
     with connection:
         cursor_ = connection.cursor()
         cursor_.execute(
-            "INSERT INTO chat (name, prompt, roles) VALUES (?, ?,?)",
-            (name, prompt, roles_json),
+            "INSERT INTO chat (name, prompt, roles, description, language, voice) VALUES (?, ?,?,?, ?,?)",
+            (name, prompt, roles_json, description, language, voice),
         )
         return cursor_.lastrowid
 

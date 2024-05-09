@@ -2,15 +2,13 @@ import torch
 from parler_tts import ParlerTTSForConditionalGeneration
 from transformers import AutoTokenizer
 
-DEFAULT_DESCRIPTION = "A female speaker with a slightly low-pitched voice delivers her words quite expressively, in a very confined sounding environment with clear audio quality."
-TTS_MODEL = "parler-tts/parler_tts_mini_v0.1"
 
-
-def generate_audio(text: str, description: str = DEFAULT_DESCRIPTION) -> dict:
+def generate_audio(text: str, description: str, tts_models: str) -> dict:
     """
     Generates audio from the given text.
 
     Args:
+        tts_models:
         description:
         text (str): The text to convert to audio.
 
@@ -19,8 +17,8 @@ def generate_audio(text: str, description: str = DEFAULT_DESCRIPTION) -> dict:
     """
     device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
-    model = ParlerTTSForConditionalGeneration.from_pretrained(TTS_MODEL).to(device)
-    tokenizer = AutoTokenizer.from_pretrained(TTS_MODEL)
+    model = ParlerTTSForConditionalGeneration.from_pretrained(tts_models).to(device)
+    tokenizer = AutoTokenizer.from_pretrained(tts_models)
 
     input_ids = tokenizer(description, return_tensors="pt").input_ids.to(device)
     prompt_input_ids = tokenizer(text, return_tensors="pt").input_ids.to(device)

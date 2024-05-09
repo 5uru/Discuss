@@ -9,3 +9,4 @@ levenshtein==0.25.1
 nltk==3.8.1
 scikit-learn==1.4.2
 soundfile==0.12.1
+fastapi==0.111.0
