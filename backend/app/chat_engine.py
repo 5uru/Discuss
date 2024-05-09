@@ -25,8 +25,8 @@ language_info = {
 
 def message(chat_id, new_message_audio):
     chat_information = get_chat_by_id(chat_id)
-    language = chat_information[5]
-    voice = chat_information[6]
+    language = chat_information.language
+    voice = chat_information.voice
     new_message_text = transcribe(new_message_audio, language)
     message_correction_data = grammar_coherence_correction(new_message_text, language)
 
@@ -39,15 +39,15 @@ def message(chat_id, new_message_audio):
     )
 
     old_messages = get_messages_by_chat_id(chat_id)
-    prompt, roles_json = chat_information[2], chat_information[3]
+    prompt, roles_json = chat_information.prompt, chat_information.roles
     roles = json.loads(roles_json)
 
-    old_messages_text = "\n".join(
-        f"{roles[ msg[ 2 ] ]}: {json.loads(msg[ 3 ])[ 'rewritten' ]}"
+    old_messages_text = "".join(
+        f"<|start_header_id|>{roles[ msg.role ]}<|end_header_id|>{json.loads(msg.content)[ 'rewritten' ]}<|eot_id|>"
         for msg in reversed(old_messages)
     )
 
-    prompt_finally = f"{prompt}\n{old_messages_text}:\n{roles[ 'assistant' ]}:\n"
+    prompt_finally = f"{prompt}{old_messages_text}<|start_header_id|>{roles[ 'assistant' ]}<|end_header_id|>"
     response = generation(
         prompt_finally, llm_model=language_info[language]["llm_model"]
     )
@@ -78,6 +78,6 @@ def create_chat(name, prompt, roles, description, language, voice):
 def get_chats():
     all_chats = get_all_chats()
     return [
-        {"id": chat[0], "name": chat[1], "description": chat[4]}
+        {"id": chat.id, "name": chat.name, "description": chat.description}
         for chat in all_chats
     ]

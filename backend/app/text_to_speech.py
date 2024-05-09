@@ -1,9 +1,13 @@
+import os
+import uuid
+
+import soundfile as sf
 import torch
 from parler_tts import ParlerTTSForConditionalGeneration
 from transformers import AutoTokenizer
 
 
-def generate_audio(text: str, description: str, tts_models: str) -> dict:
+def generate_audio(text: str, description: str, tts_models: str):
     """
     Generates audio from the given text.
 
@@ -25,4 +29,10 @@ def generate_audio(text: str, description: str, tts_models: str) -> dict:
 
     generation = model.generate(input_ids=input_ids, prompt_input_ids=prompt_input_ids)
     audio_arr = generation.cpu().numpy().squeeze()
-    return {"audio": audio_arr.tolist(), "sampling_rate": model.config.sampling_rate}
+    # Generate a unique file name
+    file_name = f"{uuid.uuid4()}.wav"
+    output_file_path = os.path.join("data/audio", file_name)
+
+    # Save the audio data to a .wav file
+    sf.write(output_file_path, audio_arr, samplerate=model.config.sampling_rate)
+    return output_file_path
