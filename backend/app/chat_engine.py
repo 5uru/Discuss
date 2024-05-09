@@ -1,6 +1,11 @@
 import json
 
-from backend.app.database import get_chat_by_id, get_messages_by_chat_id, insert_message
+from backend.app.database import (
+    get_chat_by_id ,
+    get_messages_by_chat_id ,
+    insert_message ,
+    insert_chat ,
+)
 from backend.app.llm_provider import generation
 from backend.app.speech_to_text import transcribe
 from backend.app.spell_check import grammar_coherence_correction
@@ -25,11 +30,11 @@ def message(chat_id, new_message_audio, language="en"):
     roles = json.loads(roles_json)
 
     old_messages_text = "\n".join(
-        f"{roles[msg[2]]}: {json.loads(msg[3])['rewritten']}"
+        f"{roles[ msg[ 2 ] ]}: {json.loads(msg[ 3 ])[ 'rewritten' ]}"
         for msg in reversed(old_messages)
     )
 
-    prompt_finally = f"{prompt}\n{old_messages_text}{roles['assistant']}:\n"
+    prompt_finally = f"{prompt}\n{old_messages_text}:\n{roles[ 'assistant' ]}:\n"
     response = generation(prompt_finally)
     audio = generate_audio(response)
 
@@ -45,3 +50,7 @@ def message(chat_id, new_message_audio, language="en"):
             "audio": audio,
         },
     }
+
+
+def create_chat(name, prompt, roles):
+    return insert_chat(name, prompt, roles)
