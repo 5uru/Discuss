@@ -1,0 +1,97 @@
+ENG:
+Female: https://github.com/coqui-ai/TTS/discussions/1891
+https://mbarnig.github.io/TTS-Models-Comparison/
+https://github.com/coqui-ai/TTS/blob/dev/TTS/.models.json
+https://github.com/idiap/coqui-ai-TTS
+1-
+tts_models/en/ljspeech/tacotron2-DDC
+vocoder_models/en/ljspeech/hifigan_v2
+2-
+tts_models-en-ljspeech-fast_pitch-vocoder_models-en-ljspeech-hifigan_v2
+
+3-
+tts_models-en-ljspeech-glow-tts-vocoder_models-en-ljspeech-multiband-melgan.wav
+4-
+tts_models-en-ljspeech-glow-tts-vocoder_models-en-ljspeech-univnet.wav
+5-
+tts_models-en-ljspeech-glow-tts-vocoder_models-universal-libri-tts-fullband-melgan.wav
+6-
+tts_models-en-ljspeech-speedy-speech-vocoder_models-en-ljspeech-hifigan_v2.wav
+7-
+tts_models-en-ljspeech-tacotron2-DDC_ph-vocoder_models-en-ljspeech-multiband-melgan.wav
+8-
+tts_models-en-ljspeech-tacotron2-DDC_ph-vocoder_models-en-ljspeech-multiband-melgan.wav
+9-
+tts_models-en-ljspeech-tacotron2-DDC_ph-vocoder_models-en-ljspeech-univnet.wav
+10-
+tts_models-en-ljspeech-tacotron2-DDC_ph-vocoder_models-universal-libri-tts-fullband-melgan.wav
+11-
+tts_models/en/ljspeech/fast_pitch and vocoder_models/en/ljspeech/hifigan_v2
+12-
+api = TTS(model_name="tts_models/en/vctk/vits").to("cpu")
+api.tts_to_file(text , speaker="p273" , file_path="output.wav")
+13-
+api = TTS(model_name="tts_models/en/vctk/vits").to("cpu")
+api.tts_to_file(text , speaker="p347" , file_path="output.wav")
+14-
+api = TTS(model_name="tts_models/en/vctk/vits").to("cpu")
+api.tts_to_file(text , speaker="p335" , file_path="output.wav")
+15-
+api = TTS(model_name="tts_models/en/vctk/vits").to("cpu")
+api.tts_to_file(text , speaker="p273" , file_path="output.wav")
+16-
+api = TTS(model_name="tts_models/en/vctk/vits").to("cpu")
+api.tts_to_file(text , speaker="p257" , file_path="output.wav")
+17-
+api = TTS(model_name="tts_models/en/vctk/vits").to("cpu")
+api.tts_to_file(text , speaker="p270" , file_path="output.wav")
+18-
+api = TTS(model_name="tts_models/en/vctk/vits").to("cpu")
+api.tts_to_file(text , speaker="p293" , file_path="output.wav")
+19-
+api = TTS(model_name="tts_models/en/vctk/vits").to("cpu")
+api.tts_to_file(text , speaker="p360" , file_path="output.wav")
+20-
+api = TTS(model_name="tts_models/en/ljspeech/vits--neon").to("cpu")
+api.tts_to_file(text , file_path="output.wav")
+
+
+Male:
+1-
+api = TTS(model_name="tts_models/en/vctk/vits").to("cpu")
+api.tts_to_file(text , speaker="p230" , file_path="output.wav")
+
+2-
+api = TTS(model_name="tts_models/en/vctk/vits").to("cpu")
+api.tts_to_file(text , speaker="p330" , file_path="output.wav")
+3-
+api = TTS(model_name="tts_models/en/vctk/vits").to("cpu")
+api.tts_to_file(text , speaker="p234" , file_path="output.wav")
+4-
+api = TTS(model_name="tts_models/en/vctk/vits").to("cpu")
+api.tts_to_file(text , speaker="p256" , file_path="output.wav")
+5-
+api = TTS(model_name="tts_models/en/vctk/vits").to("cpu")
+api.tts_to_file(text , speaker="p287" , file_path="output.wav")
+6-
+api = TTS(model_name="tts_models/en/vctk/vits").to("cpu")
+api.tts_to_file(text , speaker="p317" , file_path="output.wav")
+7-
+
+
+French:
+Female:
+1-
+api = TTS(model_name="tts_models/fr/mai/tacotron2-DDC").to("cpu")
+api.tts_to_file(text , file_path="output.wav" , vocoder="vocoder_models/en/ljspeech/hifigan_v2")
+2-
+api = TTS(model_name="tts_models/fr/css10/vits").to("cpu")
+api.tts_to_file(text , file_path="output.wav")
+
+
+
+
+
+https://colab.research.google.com/github/snakers4/silero-models/blob/master/examples_tts.ipynb#scrollTo=3bab211a
+
+
