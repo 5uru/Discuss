@@ -1,4 +1,5 @@
 import json
+import os
 from datetime import datetime
 
 from sqlalchemy import and_
@@ -117,16 +118,21 @@ def get_messages_by_chat_id(chat_id):
 
 def delete_messages_by_chat_id(chat_id):
     session = Session()
-    session.query(Message).filter(
-        and_(Message.chat_id == chat_id, Message.role != "system")
-    ).delete(synchronize_session=False)
-    session.commit()
+    if chat := session.query(Chat).get(chat_id):
+        # delete all audio files in "data/audio"
+        for message in chat.messages:
+            if audio_path := message.audio:
+                if os.path.exists(audio_path):
+                    os.remove(audio_path)
+            session.delete(message)  # delete the message
+        session.commit()
+        session.delete(chat)  # delete the chat after all messages have been deleted
+        session.commit()
     session.close()
 
 
 def delete_chat(chat_id):
+    delete_messages_by_chat_id(chat_id)
     session = Session()
-    if chat := session.query(Chat).get(chat_id):
-        session.delete(chat)
-        session.commit()
-    session.close()
+    session.query(Chat).filter_by(id=chat_id).delete()
+    session.commit()

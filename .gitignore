@@ -163,3 +163,5 @@ cython_debug/
 /mlx_models/
 /test_api/
 /backend/mlx_models/
+
+*.wav

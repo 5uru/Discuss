@@ -3,10 +3,15 @@ from Levenshtein import distance as levenshtein_distance
 from language_tool_python import LanguageTool
 from nltk.translate.bleu_score import sentence_bleu
 from sklearn.feature_extraction.text import TfidfVectorizer
+from easygoogletranslate import EasyGoogleTranslate
 
 
 def translate(text, to_language="en"):
-    return ts.translate_text(text, to_language=to_language)
+    translator = EasyGoogleTranslate(
+        source_language="en", target_language="de", timeout=10
+    )
+    translator.translate("This is an example.")
+    return translator.translate(text, target_language=to_language)
 
 
 def grammar_check(text, language="en-US"):

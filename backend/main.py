@@ -6,6 +6,9 @@ from pydantic import BaseModel
 from backend.app.chat_engine import get_chats
 from backend.app.chat_engine import insert_chat
 from backend.app.chat_engine import message as process_message
+from backend.app.chat_engine import get_chat_messages
+from backend.app.database import delete_messages_by_chat_id
+from backend.app.database import delete_chat
 
 
 class Chat(BaseModel):
@@ -40,6 +43,32 @@ def create_chat(chat: Chat):
         chat.language,
         chat.voice,
     )
+
+
+@app.delete("/chats/{chat_id}")
+def delete_chat_route(chat_id: int):
+    try:
+        delete_chat(chat_id)
+        return {"message": "Chat deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+
+
+@app.get("/chats/{chat_id}/messages")
+def chat_messages(chat_id: int):
+    try:
+        return get_chat_messages(chat_id)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+
+
+@app.delete("/chats/{chat_id}/messages")
+def delete_chat_messages(chat_id: int):
+    try:
+        delete_messages_by_chat_id(chat_id)
+        return {"message": "Chat messages deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 @app.post("/message")

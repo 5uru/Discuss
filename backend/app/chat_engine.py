@@ -56,21 +56,19 @@ def message(chat_id, new_message_audio):
         speaker=language_info[language][voice]["speaker_id"],
     )
 
+    assistant_response = {"rewritten": response, "translate": translate(response)}
     # Insert the assistant's response
     insert_message(
         chat_id=chat_id,
         role="assistant",
-        content={"rewritten": response, "translate": translate(response)},
+        content=assistant_response,
         audio=audio,
     )
     logging.info("Assistant's response inserted into the database")
 
     return {
         "message_corrected": message_correction_data,
-        "response": {
-            "text": response,
-            "audio": audio,
-        },
+        "response": assistant_response,
     }
 
 
@@ -88,3 +86,22 @@ def get_chats():
     ]
     logging.info(f"Retrieved {len(chat_list)} chats")
     return chat_list
+
+
+def get_chat_messages(chat_id):
+    logging.info(f"Retrieving messages for chat_id: {chat_id}")
+    messages = reversed(get_messages_by_chat_id(chat_id))
+    chat_information = get_chat_by_id(chat_id)
+    roles = json.loads(chat_information.roles)
+    message_list = [
+        {
+            "type": message_.role,
+            "role": roles[message_.role],
+            "content": json.loads(message_.content),
+            "audio": message_.audio,
+            "date": message_.date.strftime("%Y-%m-%d %H:%M:%S"),
+        }
+        for message_ in messages
+    ]
+    logging.info(f"Retrieved {len(message_list)} messages")
+    return message_list

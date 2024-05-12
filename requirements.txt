@@ -1,4 +1,4 @@
-transformers==4.40.1
+transformers==4.40.2
 numpy==1.26.4
 torch==2.3.0
 mlx-whisper==0.1.0
@@ -12,3 +12,17 @@ soundfile==0.12.1
 fastapi==0.111.0
 pydantic==2.7.1
 sqlalchemy==2.0.30
+jamo==0.4.1
+cn2an==0.5.22
+jieba==0.42.1
+pypinyin==0.51.0
+num2words==0.5.13
+pykakasi==2.2.1
+inflect==7.0.0
+six==1.16.0
+gruut==2.3.4
+tqdm==4.66.4
+torchaudio==2.3.0
+librosa==0.10.2
+scipy==1.13.0
+easygoogletranslate==0.0.4
