@@ -4,7 +4,7 @@ from mlx_lm import load, generate
 LLM_MODEL = "mlx-community/Meta-Llama-3-8B-Instruct-4bit"
 
 
-def generation(text, llm_model):
+def generation(text, llm_model=LLM_MODEL):
     model_config = {
         "verbose": True,
         "temp": 0.7,

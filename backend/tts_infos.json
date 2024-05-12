@@ -1,0 +1,62 @@
+{
+  "en": {
+    "speaker_1": {
+      "language": "EN",
+      "speaker_id": "EN-Default",
+      "description": " English speaker default."
+    },
+    "speaker_2": {
+      "language": "EN",
+      "speaker_id": "EN-US",
+      "description": " English speaker with US accent."
+    },
+    "speaker_3": {
+      "language": "EN",
+      "speaker_id": "EN-BR",
+      "description": " English speaker with British accent."
+    },
+    "speaker_4": {
+      "language": "EN",
+      "speaker_id": "EN_INDIA",
+      "description": " English speaker with INDIA accent."
+    },
+    "speaker_5": {
+      "language": "EN",
+      "speaker_id": "EN-AU",
+      "description": " English speaker with AU accent."
+    },
+    "speaker_6": {
+      "language": "EN_NEWEST",
+      "speaker_id": "EN-Newest",
+      "description": " English speaker with US accent."
+    }
+  },
+  "es": {
+    "speaker_1": {
+      "language": "ES",
+      "speaker_id": "ES",
+      "description": "Spanish speaker default."
+    }
+  },
+  "fr": {
+    "speaker_1": {
+      "language": "FR",
+      "speaker_id": "FR",
+      "description": "French speaker default."
+    }
+  },
+  "zh": {
+    "speaker_1": {
+      "language": "ZH",
+      "speaker_id": "ZH",
+      "description": "Chinese speaker default."
+    }
+  },
+  "jp": {
+    "speaker_1": {
+      "language": "JP",
+      "speaker_id": "JP",
+      "description": "Japanese speaker default."
+    }
+  }
+}
